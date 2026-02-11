@@ -13,11 +13,19 @@ export default function Login({ onLogin }: LoginProps) {
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    // Mock login
+    // Mock login - admin check
+    const isAdmin = email.includes('admin');
+    const isProfessor = email.includes('prof') || email.includes('docente');
+    
+    let role: 'student' | 'professor' | 'guest' | 'admin' = 'student';
+    if (isAdmin) role = 'admin';
+    else if (isProfessor) role = 'professor';
+    else if (!email.includes('eafit.edu.co')) role = 'guest';
+    
     onLogin({
       name: email.split('@')[0] || 'Usuario',
       email: email || 'invitado@eafit.edu.co',
-      role: email.includes('eafit.edu.co') ? 'student' : 'guest',
+      role,
       id: Math.random().toString(36).substr(2, 9)
     });
   };
@@ -139,9 +147,12 @@ export default function Login({ onLogin }: LoginProps) {
           )}
         </div>
 
-        <p className="text-center text-blue-200 text-sm mt-6">
-          © 2026 Universidad EAFIT - Medellín, Colombia
-        </p>
+        <div className="text-center text-blue-200 text-xs mt-6 space-y-1">
+          <p className="opacity-60">
+            💡 Tip: Para acceder como administrador, usa un email con "admin"
+          </p>
+          <p className="text-sm">© 2026 Universidad EAFIT - Medellín, Colombia</p>
+        </div>
       </div>
     </div>
   );

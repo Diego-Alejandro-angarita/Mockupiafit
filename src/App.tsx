@@ -7,13 +7,17 @@ import Classrooms from './components/Classrooms';
 import Restaurants from './components/Restaurants';
 import Events from './components/Events';
 import Profile from './components/Profile';
+import AdminDashboard from './components/AdminDashboard';
+import AcademicCalendar from './components/AcademicCalendar';
+import Directory from './components/Directory';
+import StudentGroups from './components/StudentGroups';
 
-export type Screen = 'login' | 'home' | 'chat' | 'map' | 'classrooms' | 'restaurants' | 'events' | 'profile';
+export type Screen = 'login' | 'home' | 'chat' | 'map' | 'classrooms' | 'restaurants' | 'events' | 'profile' | 'admin' | 'calendar' | 'directory' | 'groups';
 
 export interface User {
   name: string;
   email: string;
-  role: 'student' | 'professor' | 'guest';
+  role: 'student' | 'professor' | 'guest' | 'admin';
   id: string;
 }
 
@@ -60,6 +64,18 @@ function App() {
       )}
       {currentScreen === 'profile' && user && (
         <Profile user={user} onNavigate={navigate} onLogout={handleLogout} />
+      )}
+      {currentScreen === 'admin' && user && (
+        <AdminDashboard user={user} onNavigate={navigate} />
+      )}
+      {currentScreen === 'calendar' && user && (
+        <AcademicCalendar user={user} onNavigate={navigate} />
+      )}
+      {currentScreen === 'directory' && user && (
+        <Directory user={user} onNavigate={navigate} />
+      )}
+      {currentScreen === 'groups' && user && (
+        <StudentGroups user={user} onNavigate={navigate} />
       )}
     </div>
   );

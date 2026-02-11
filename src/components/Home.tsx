@@ -1,6 +1,7 @@
-import { Search, MapPin, School, Coffee, Calendar, HelpCircle, MessageCircle, User } from 'lucide-react';
+import { Search, MapPin, School, Coffee, Calendar, HelpCircle, MessageCircle, User, Users, BookOpen, Shield } from 'lucide-react';
 import type { User as UserType, Screen } from '../App';
 import { ImageWithFallback } from './figma/ImageWithFallback';
+import { motion } from 'motion/react';
 
 interface HomeProps {
   user: UserType;
@@ -46,6 +47,51 @@ export default function Home({ user, onNavigate }: HomeProps) {
       image: 'https://images.unsplash.com/photo-1660795308754-4c6422baf2f6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx1bml2ZXJzaXR5JTIwc2VtaW5hciUyMGNvbmZlcmVuY2UlMjBldmVudHxlbnwxfHx8fDE3NzA4MjU2NDF8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'
     }
   ];
+
+  const newFeatures = [
+    {
+      id: 'calendar',
+      title: 'Calendario Académico',
+      description: 'Fechas importantes del semestre',
+      icon: BookOpen,
+      color: 'bg-indigo-500',
+      screen: 'calendar' as Screen,
+      image: 'https://images.unsplash.com/photo-1703300450387-047da16a89c4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjYWxlbmRhciUyMHBsYW5uZXIlMjBhY2FkZW1pYyUyMHNjaGVkdWxlfGVufDF8fHx8MTc3MDgyNjk2OHww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'
+    },
+    {
+      id: 'directory',
+      title: 'Directorio',
+      description: 'Profesores y administrativos',
+      icon: User,
+      color: 'bg-teal-500',
+      screen: 'directory' as Screen,
+      image: 'https://images.unsplash.com/photo-1547916105-e44d6aa9cc28?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx1bml2ZXJzaXR5JTIwZmFjdWx0eSUyMHByb2Zlc3NvciUyMG9mZmljZXxlbnwxfHx8fDE3NzA4MjY5NjZ8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'
+    },
+    {
+      id: 'groups',
+      title: 'Grupos y Semilleros',
+      description: 'Únete a la comunidad',
+      icon: Users,
+      color: 'bg-pink-500',
+      screen: 'groups' as Screen,
+      image: 'https://images.unsplash.com/photo-1760351561007-526f5353cc76?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzdHVkZW50JTIwZ3JvdXAlMjBjb2xsYWJvcmF0aW9uJTIwbWVldGluZ3xlbnwxfHx8fDE3NzA4MjY5Njd8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'
+    }
+  ];
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0 }
+  };
 
   const frequentQuestions = [
     '¿Dónde está el Bloque 38?',
@@ -105,14 +151,20 @@ export default function Home({ user, onNavigate }: HomeProps) {
         </div>
 
         {/* Accesos rápidos */}
-        <div className="mb-12">
+        <motion.div 
+          className="mb-12"
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+        >
           <h2 className="text-2xl text-gray-800 mb-6">Accesos Rápidos</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {quickActions.map((action) => {
               const Icon = action.icon;
               return (
-                <button
+                <motion.button
                   key={action.id}
+                  variants={itemVariants}
                   onClick={() => onNavigate(action.screen)}
                   className="bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden group"
                 >
@@ -131,11 +183,61 @@ export default function Home({ user, onNavigate }: HomeProps) {
                     <h3 className="text-lg text-gray-800 mb-1">{action.title}</h3>
                     <p className="text-sm text-gray-600">{action.description}</p>
                   </div>
-                </button>
+                </motion.button>
               );
             })}
           </div>
-        </div>
+        </motion.div>
+
+        {/* Nuevas Funcionalidades */}
+        <motion.div 
+          className="mb-12"
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+        >
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-2xl text-gray-800">Descubre Más</h2>
+            {user.role === 'admin' && (
+              <button
+                onClick={() => onNavigate('admin')}
+                className="flex items-center gap-2 px-4 py-2 bg-[#003366] text-white rounded-lg hover:bg-[#004d99] transition-colors"
+              >
+                <Shield size={20} />
+                <span>Panel Admin</span>
+              </button>
+            )}
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {newFeatures.map((feature) => {
+              const Icon = feature.icon;
+              return (
+                <motion.button
+                  key={feature.id}
+                  variants={itemVariants}
+                  onClick={() => onNavigate(feature.screen)}
+                  className="bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden group"
+                >
+                  <div className="relative h-48 overflow-hidden">
+                    <ImageWithFallback
+                      src={feature.image}
+                      alt={feature.title}
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                    <div className={`absolute top-4 right-4 ${feature.color} text-white p-3 rounded-xl shadow-lg`}>
+                      <Icon size={24} />
+                    </div>
+                  </div>
+                  <div className="p-5">
+                    <h3 className="text-lg text-gray-800 mb-1">{feature.title}</h3>
+                    <p className="text-sm text-gray-600">{feature.description}</p>
+                  </div>
+                </motion.button>
+              );
+            })}
+          </div>
+        </motion.div>
 
         {/* Preguntas frecuentes */}
         <div className="mb-12">

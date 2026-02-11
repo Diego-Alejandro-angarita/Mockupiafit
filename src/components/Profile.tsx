@@ -30,7 +30,8 @@ export default function Profile({ user, onNavigate, onLogout }: ProfileProps) {
       title: 'Cuenta',
       items: [
         { icon: UserIcon, label: 'Información personal', action: () => {} },
-        { icon: Shield, label: 'Privacidad y seguridad', action: () => {} }
+        { icon: Shield, label: 'Privacidad y seguridad', action: () => {} },
+        ...(user.role === 'admin' ? [{ icon: Shield, label: 'Panel Administrativo', action: () => onNavigate('admin') }] : [])
       ]
     },
     {
